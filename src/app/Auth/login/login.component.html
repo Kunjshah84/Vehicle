@@ -1,0 +1,34 @@
+
+<!-- <h1 style="color:red">LOGIN COMPONENT ACTIVE</h1>
+<button (click)="test()">CLICK ME</button> -->
+<div class="auth-container">
+    <h1 class="brand-title">AutoHub</h1>
+    <p class="brand-subtitle">Welcome back, driver 👇</p>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" formControlName="email" placeholder="abc@example.com"/>
+            <span *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+                <span *ngIf="email?.errors?.['required']">Email is required</span>
+                <span *ngIf="email?.errors?.['email']">Invalid email format</span>
+            </span>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input formControlName="password" placeholder="Enter your password" 
+            [type] = "showPassword ? 'text' :  'password' "/>
+            <span *ngIf="password?.invalid && (password?.dirty || password?.touched)">
+                <span *ngIf="password?.errors?.['required']">password Should Be There</span>
+                <span *ngIf="password?.errors?.['minlength']">Invalid Format</span>
+            </span>
+            <button type="button" class="toggle-btn" (click)="togglePassword()">
+                {{ showPassword ? 'Hide' : 'Show' }} Password
+            </button>
+        </div>
+            <button type="submit">Login</button>
+    </form>
+    <!-- <button (click)="testClick()">TEST CLICK</button> -->
+    <p class="switch-text">
+        Not Have An Account? <a routerLink="/register">Register</a>
+    </p>
+</div>
