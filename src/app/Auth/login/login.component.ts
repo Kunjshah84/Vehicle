@@ -14,6 +14,9 @@ import { AuthService } from '../../core/services/auth.service';
   standalone: true
 })
 export class LoginComponent {
+
+  // errorMessage = '';
+
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)])
@@ -48,7 +51,13 @@ export class LoginComponent {
     
     this.auth.login(email!, password!).subscribe({
       next: () => { this.router.navigate(['/Deshboard'])},
-      error: err => console.error(err)
+      error: err => {
+        if (err.status === 401) {
+          alert(err.error?.message || 'Invalid credentials');
+        } else {
+          alert('The error not mentioned in the server in the login page');
+        }
+      }
     });
   }
 

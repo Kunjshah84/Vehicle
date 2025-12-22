@@ -76,7 +76,14 @@ export class RegisterComponent {
 
     this.auth.register({ FullName , Email, Password, Number }).subscribe({
       next: () => { console.log("Registration successful"); this.router.navigate(['/Deshboard'])},
-      error: err => console.error(err)
+      error: err =>{
+        if(err.status === 400){
+          alert(err.error?.message);
+        }
+        else{
+          alert('An unexpected error occurred during registration.');
+        }
+      }
     });
 
   }

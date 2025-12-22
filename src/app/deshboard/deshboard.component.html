@@ -1,2 +1,46 @@
-<br>
+<!-- <br>
 <p style="color: white;">In the deshboard</p>
+
+
+<button (click)="loadvehicales()">
+  Load Vehicles
+</button>
+
+<pre *ngIf="vehicles.length" style="color: white;">
+{{ vehicles | json }}
+</pre> -->
+
+
+<div class="layout">
+  <div class="body">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <p *ngIf="isLoading">Loading vehicles...</p>
+      <p *ngIf="error">{{ error }}</p>
+      <p *ngIf="!isLoading && vehicles.length === 0">
+        No vehicles available
+      </p>
+      <div class="vehicle-grid" *ngIf="!isLoading && vehicles.length > 0">
+        <div class="vehicle-card" *ngFor="let v of vehicles">
+          <img
+            [src]="v.images[0]?.imageLocation"
+            alt="Vehicle image"
+            class="vehicle-image"
+          />
+          <!-- <img src="/caru.jpg" alt="Vehicle image" class="vehicle-image"/> -->
+          <h3 style="color: #666;">{{ v.vehicleName }} ({{ v.model }})</h3>
+          <p class="meta">
+            {{ v.yearOfProduction }} • ₹{{ v.basePrice }}
+          </p>
+          <p class="desc">{{ v.shortDescription }}</p>
+          <span class="stock" [class.out]="v.stockCount === 0">
+            {{ v.stockCount > 0 ? 'In Stock' : 'Out of Stock' }}
+          </span>
+          <button class="details-btn" (click)="goToVehicle(v.vehicalId)">
+            Show more
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

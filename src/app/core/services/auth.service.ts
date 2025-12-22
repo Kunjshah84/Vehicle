@@ -9,8 +9,20 @@ export interface RegisterDto {
   Number: string;
 }
 
-interface LoginResponse {
+// interface LoginResponse {
+//   token: string;
+// }
+
+
+export interface LoginResponse {
   token: string;
+  user: {
+    userId: number;
+    fullName: string;
+    email: string;
+    number: string;
+    role: string;
+  };
 }
 
 interface RegisterResponse {
@@ -26,7 +38,7 @@ interface RegisterResponse {
 
 interface AuthState {
   token: string;
-  user?: {
+  user: {
     userId: number;
     fullName: string;
     email: string;
@@ -35,6 +47,7 @@ interface AuthState {
   };
 }
 
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly API = 'http://localhost:5078/api/auth';
@@ -42,6 +55,10 @@ export class AuthService {
   private authStateSubject = new BehaviorSubject<AuthState | null>(null);
 
   authState$ = this.authStateSubject.asObservable();
+
+  // --------------->From here gonna use the local storage
+  private readonly TOKEN_KEY = 'access_token';
+
 
   constructor(private http: HttpClient) {}
 
@@ -52,10 +69,15 @@ export class AuthService {
       { withCredentials: true } 
     ).pipe(
       tap(res => {
-        this.authStateSubject.next({ token: res.token });
+        // this.authStateSubject.next({ token: res.token });
+        this.authStateSubject.next({
+          token: res.token,
+          user: res.user
+        });
         // this.authStateSubject.subscribe(val => {
         //   console.log('The token form the backend is', val);
         // })
+        localStorage.setItem(this.TOKEN_KEY, res.token);
       })
     );
   }
@@ -72,22 +94,61 @@ export class AuthService {
           token: res.token,
           user: res.user
         });
-        this.authStateSubject.subscribe(val => {
-          console.log('The token form the backend is', val);
-        });
+        // this.authStateSubject.subscribe(val => {
+        //   console.log('The token form the backend is', val);
+        // });
+          localStorage.setItem(this.TOKEN_KEY, res.token);
       })
     );
   }
 
+
+  refreshToken(): Observable<{ token: string }> {
+    return this.http.post<{ token: string }>(
+      `${this.API}/refresh`,
+      {},
+      { withCredentials: true }
+    );
+  }
+
+  logout() {
+    const authState = this.authStateSubject.value;
+
+    if (!authState?.user?.email) {
+      this.clearAuthState();
+      return this.http.post(`${this.API}/logout`, {});
+    }
+
+    return this.http.post(
+      `${this.API}/logout`,
+      { email: authState.user.email },
+      { withCredentials: true }
+    ).pipe(
+      tap(() => {
+        this.authStateSubject.next(null);
+        localStorage.removeItem(this.TOKEN_KEY);
+      })
+    );
+  }
+
+
+
+
   getAccessToken(): string | null {
-    return this.authStateSubject.value?.token ?? null;
+    // return localStorage.getItem(this.TOKEN_KEY);
+    return this.authStateSubject.value?.token
+    ?? localStorage.getItem(this.TOKEN_KEY);
   }
 
   isAuthenticated(): boolean {
-    return !!this.authStateSubject.value?.token;
+    return !!localStorage.getItem(this.TOKEN_KEY);
+
   }
 
   clearAuthState(): void {
+    // this.authStateSubject.next(null);
+    // localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.TOKEN_KEY);
     this.authStateSubject.next(null);
   }
 }
