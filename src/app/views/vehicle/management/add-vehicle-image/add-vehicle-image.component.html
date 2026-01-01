@@ -1,0 +1,64 @@
+<div class="page-container">
+
+  <div class="upload-box">
+    <h2>Add Vehicle Image</h2>
+
+    <div class="field">
+      <label>Vehicle ID</label>
+      <input
+        type="number"
+        placeholder="Enter Vehicle ID"
+        [(ngModel)]="vehicleId"
+      />
+    </div>
+
+    <div class="field">
+      <label>Select Image</label>
+      <input
+        type="file"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+        [disabled]="!vehicleId || isUploading"
+      />
+    </div>
+
+    <button
+      class="upload-btn"
+      (click)="uploadImage()"
+      [disabled]="!vehicleId || !selectedFile || isUploading"
+    >
+      {{ isUploading ? 'Uploading...' : 'Upload Image' }}
+    </button>
+
+    <p class="success" *ngIf="successMessage">
+      {{ successMessage }}
+    </p>
+
+    <p class="error" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </p>
+  </div>
+
+  <div class="image-section" *ngIf="images.length > 0">
+    <h3>Vehicle Images</h3>
+
+    <div class="image-grid">
+      <div class="image-card" *ngFor="let img of images">
+        <img [src]="img.imageLocation" alt="Vehicle image" />
+
+        <div class="meta">
+          <p><strong>Image ID:</strong> {{ img.imageId }}</p>
+          <p><strong>Sort Order:</strong> {{ img.sortOrder }}</p>
+        </div>
+
+        <button
+          class="delete-btn"
+          (click)="confirmDelete(img.imageId)"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

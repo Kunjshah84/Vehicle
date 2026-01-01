@@ -1,0 +1,56 @@
+.management-layout {
+  display: flex;
+  height: calc(100vh - 60px);
+  background-color: #0d0d0d;
+}
+
+
+.sidebar {
+  width: 260px;
+  background: #0d0d0d;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-right: 1px solid #6a00ff;
+}
+
+.sidebar .title {
+  color: #f8fafc;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  padding-left: 8px;
+}
+
+.sidebar button {
+  background: transparent;
+  border: none;
+  color: #cbd5f5;
+  text-align: left;
+  padding: 12px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+.sidebar button:hover {
+  background: rgba(168, 85, 247, 0.12);
+  color: #ffffff;
+}
+
+.sidebar button.active {
+  background: rgba(168, 85, 247, 0.22);
+  color: #ffffff;
+}
+
+
+.content {
+  flex: 1;
+  padding: 32px;
+  background-color: #0d0d0d;
+  color: #e5e7eb;
+  overflow-y: auto;
+}

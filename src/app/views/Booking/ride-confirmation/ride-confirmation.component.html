@@ -1,0 +1,72 @@
+<div class="booking-container" *ngIf="!isLoading && booking">
+
+  <div class="booking-card">
+
+    <div class="header">
+      <h1>Ride Confirmed</h1>
+      <span class="status confirmed">{{ booking.rideStatus }}</span>
+    </div>
+
+    <div class="dates">
+      <div>
+        <span class="label">Start Date</span>
+        <span class="value">{{ booking.startDate }}</span>
+      </div>
+      <div>
+        <span class="label">End Date</span>
+        <span class="value">{{ booking.endDate }}</span>
+      </div>
+    </div>
+
+    <section class="section">
+      <h2>Vehicle Details</h2>
+      <p class="title">
+        {{ booking.vehicle.vehicleName }} {{ booking.vehicle.model }}
+      </p>
+      <p class="muted">
+        {{ booking.vehicle.shortDescription }}
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>User Details</h2>
+      <div class="grid">
+        <span>Name</span>
+        <span>{{ booking.user.fullName }}</span>
+
+        <span>Email</span>
+        <span>{{ booking.user.email }}</span>
+
+        <span>Contact</span>
+        <span>{{ booking.user.number }}</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Showroom</h2>
+      <div class="grid">
+        <span>Name</span>
+        <span>{{ booking.showroom.showroomName }}</span>
+
+        <span>Location</span>
+        <span>{{ booking.showroom.showroomLocation }}</span>
+
+        <span>Contact</span>
+        <span>{{ booking.showroom.contactNumber }}</span>
+      </div>
+    </section>
+
+    <div class="actions">
+      <button class="secondary" (click)="goBack()">
+        Back to Dashboard
+      </button>
+      <button class="printing-btn">
+        Download Receipt
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<div *ngIf="isLoading" class="state-text">Processing booking...</div>
+<div *ngIf="error" class="state-text error">{{ error }}</div>

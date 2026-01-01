@@ -1,0 +1,70 @@
+<div class="auth-page">
+  <div class="auth-container">
+    <h1 class="brand-title">AutoHub</h1>
+    <p class="brand-subtitle">Welcome back, driver 👇</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>Email</label>
+        <input
+          type="text"
+          formControlName="email"
+          placeholder="abc@example.com"
+        />
+
+        <span *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+          <span *ngIf="email?.errors?.['required']">Email is required</span>
+          <span *ngIf="email?.errors?.['email']">Invalid email format</span>
+        </span>
+      </div>
+
+      <div class="form-group password-field">
+        <label>Password</label>
+
+        <div class="password-wrapper">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Enter your password"
+          />
+
+          <button
+            type="button"
+            class="eye-btn"
+            (click)="togglePassword()"
+          >
+            <i
+              class="fa"
+              [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"
+            ></i>
+          </button>
+        </div>
+
+        <span *ngIf="password?.invalid && (password?.dirty || password?.touched)">
+          <span *ngIf="password?.errors?.['required']">Password is required</span>
+          <span *ngIf="password?.errors?.['minlength']">Invalid format</span>
+        </span>
+      </div>
+
+      <div class="Forgot-section">
+        <p class="forgot-password" (click)="goToForgotPassword()">
+          Forgot password?
+        </p>
+      </div>
+
+      <div class="remember-row">
+        <label class="remember-box">
+          <input type="checkbox" formControlName="rememberMe" />
+          <span>Remember me</span>
+        </label>
+      </div>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <p class="switch-text">
+      Not Have An Account?
+      <a routerLink="/register">Register</a>
+    </p>
+  </div>
+</div>

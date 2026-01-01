@@ -1,0 +1,109 @@
+<div class="find-vehicle-container">
+
+  <h2>Find Vehicle</h2>
+
+  <!-- Search Box -->
+  <form [formGroup]="form" (ngSubmit)="findVehicle()" class="search-box">
+    <input
+      type="text"
+      placeholder="Enter Vehicle ID"
+      formControlName="vehicleId"
+    />
+    <button type="submit" [disabled]="form.invalid || isLoading">
+      Search
+    </button>
+  </form>
+
+  <p class="hint" *ngIf="form.invalid && form.touched">
+    Please enter a valid numeric vehicle ID
+  </p>
+
+  <p class="state-text" *ngIf="isLoading">Fetching vehicle details...</p>
+  <p class="state-text error" *ngIf="error">{{ error }}</p>
+
+  <div class="vehicle-spec-container" *ngIf="!isLoading && vehicle">
+
+    <ngb-carousel
+      *ngIf="vehicle.images?.length"
+      [interval]="3000"
+      [pauseOnHover]="true"
+      [wrap]="true"
+    >
+      <ng-template ngbSlide *ngFor="let img of vehicle.images">
+        <img
+          [src]="img.imageLocation"
+          class="hero-image"
+          alt="Vehicle image"
+        />
+      </ng-template>
+    </ngb-carousel>
+
+    <section class="basic-info">
+      <h1>{{ vehicle.vehicleName }} {{ vehicle.model }}</h1>
+
+      <table class="info-table">
+        <tr>
+          <th>Year</th>
+          <td>{{ vehicle.yearOfProduction }}</td>
+        </tr>
+
+        <tr>
+          <th>Price</th>
+          <td>₹{{ vehicle.basePrice }}</td>
+        </tr>
+
+        <tr>
+          <th>Status</th>
+          <td>{{ vehicle.stockCount > 0 ? 'In Stock' : 'Out of Stock' }}</td>
+        </tr>
+      </table>
+    </section>
+
+    <section class="spec-section" *ngIf="vehicle.specifications?.length">
+      <h2>Specifications</h2>
+
+      <table class="spec-table">
+        <tr *ngIf="vehicle.specifications[0].engine">
+          <th>Engine</th>
+          <td>{{ vehicle.specifications[0].engine }} cc</td>
+        </tr>
+
+        <tr *ngIf="vehicle.specifications[0].powerOfvehical">
+          <th>Power</th>
+          <td>{{ vehicle.specifications[0].powerOfvehical }}</td>
+        </tr>
+
+        <tr *ngIf="vehicle.specifications[0].torque">
+          <th>Torque</th>
+          <td>{{ vehicle.specifications[0].torque }}</td>
+        </tr>
+
+        <tr *ngIf="vehicle.specifications[0].fuleType">
+          <th>Fuel Type</th>
+          <td>{{ vehicle.specifications[0].fuleType }}</td>
+        </tr>
+
+        <tr *ngIf="vehicle.specifications[0].mileage">
+          <th>Mileage</th>
+          <td>{{ vehicle.specifications[0].mileage }}</td>
+        </tr>
+
+        <tr *ngIf="vehicle.specifications[0].bodyType">
+          <th>Body Type</th>
+          <td>{{ vehicle.specifications[0].bodyType }}</td>
+        </tr>
+
+        <tr *ngIf="vehicle.specifications[0].seatingCapacity">
+          <th>Seating Capacity</th>
+          <td>{{ vehicle.specifications[0].seatingCapacity }}</td>
+        </tr>
+      </table>
+    </section>
+
+    <section class="description" *ngIf="vehicle.shortDescription">
+      <h2>Description</h2>
+      <p>{{ vehicle.shortDescription }}</p>
+    </section>
+  </div>
+
+</div>

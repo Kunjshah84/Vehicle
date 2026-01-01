@@ -1,0 +1,38 @@
+<nav class="navbar">
+  <div class="navbar-inner">
+    <div class="logo">
+      AutoHub
+      <span *ngIf="userName" class="username">
+        - HELLO {{ userName }}!
+      </span>
+    </div>
+
+    <button class="menu-btn" (click)="isMenuOpen = !isMenuOpen">
+      ☰
+    </button>
+
+    <ul class="links" [class.open]="isMenuOpen">
+      <li
+        *ngIf="isManager"
+        (click)="goManagement(); isMenuOpen = false"
+      >
+        Manage Vehicles
+      </li>
+      <li
+        routerLink="/dashboard"
+        routerLinkActive="active"
+        (click)="goDashboard(); isMenuOpen = false"
+      >
+        Dashboard
+      </li>
+
+      <div class="profile-wrapper">
+        <img src="/picture.png" alt="Profile" class="avatar" />
+      </div>
+
+      <li (click)="onLogout(); isMenuOpen = false">
+        Logout
+      </li>
+    </ul>
+  </div>
+</nav>

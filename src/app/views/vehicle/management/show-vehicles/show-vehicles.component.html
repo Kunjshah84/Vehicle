@@ -1,0 +1,45 @@
+<h3 class="page-title">My Showroom Vehicles</h3>
+
+<div class="vehicles-grid">
+  <div class="vehicle-card" *ngFor="let vehicle of vehicles">
+
+    <div class="image-wrapper">
+      <img
+        [src]="vehicle.primaryImageUrl || 'assets/vehicles/car1.jpg'"
+        alt="Vehicle Image"
+      />
+    </div>
+
+    <div class="vehicle-info">
+      <h4 class="vehicle-name">{{ vehicle.vehicleName }}</h4>
+
+      <p class="vehicle-id">
+        Vehicle ID: <span>{{ vehicle.vehicalId }}</span>
+      </p>
+
+      <p
+        class="stock"
+        [class.out-of-stock]="vehicle.stockCount === 0"
+      >
+        Stock: {{ vehicle.stockCount }}
+      </p>
+    </div>
+
+    <div class="vehicle-actions">
+      <button
+        class="btn delete-btn"
+        (click)="onDelete(vehicle.vehicalId)"
+      >
+        Delete
+      </button>
+
+      <button
+        class="btn edit-btn"
+        (click)="onEdit(vehicle.vehicalId)"
+      >
+        Edit
+      </button>
+    </div>
+
+  </div>
+</div>

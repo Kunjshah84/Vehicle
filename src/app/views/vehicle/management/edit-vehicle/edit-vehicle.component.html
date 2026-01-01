@@ -1,0 +1,122 @@
+<div class="edit-vehicle-page" *ngIf="!isLoading">
+
+  <h1 class="page-title">Edit Vehicle</h1>
+
+    <button
+        type="button"
+        class="back-btn"
+        (click)="goBack()"
+        >
+         Back
+    </button>
+
+
+  <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
+
+    <section class="card">
+      <h2 class="card-title">Vehicle Details</h2>
+
+      <div class="grid grid-3">
+        <input
+          type="text"
+          placeholder="Vehicle Name"
+          formControlName="vehicleName"
+        />
+
+        <input
+          type="text"
+          placeholder="Model"
+          formControlName="model"
+        />
+
+        <input
+          type="number"
+          placeholder="Year Of Production"
+          formControlName="yearOfProduction"
+        />
+      </div>
+
+      <div class="grid grid-2">
+        <input
+          type="number"
+          placeholder="Base Price"
+          formControlName="basePrice"
+        />
+
+        <input
+          type="number"
+          placeholder="Stock Count"
+          formControlName="stockCount"
+        />
+      </div>
+
+      <textarea
+        placeholder="Short Description"
+        formControlName="shortDescription"
+      ></textarea>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">Vehicle Specification</h2>
+
+      <div class="grid grid-3">
+        <input
+          type="number"
+          placeholder="Engine (cc)"
+          formControlName="engine"
+        />
+
+        <input
+          type="text"
+          placeholder="Power Of Vehicle"
+          formControlName="powerOfVehical"
+        />
+
+        <input
+          type="text"
+          placeholder="Torque"
+          formControlName="torque"
+        />
+      </div>
+
+      <div class="grid grid-3">
+        <input
+          type="text"
+          placeholder="Fuel Type"
+          formControlName="fuelType"
+        />
+
+        <input
+          type="text"
+          placeholder="Mileage"
+          formControlName="mileage"
+        />
+
+        <input
+          type="text"
+          placeholder="Body Type"
+          formControlName="bodyType"
+        />
+      </div>
+
+      <div class="grid grid-1">
+        <input
+          type="number"
+          placeholder="Seating Capacity"
+          formControlName="seatingCapacity"
+        />
+      </div>
+    </section>
+    <div class="actions">
+      <button type="submit" class="primary-btn">
+        Save Changes
+      </button>
+    </div>
+
+  </form>
+
+</div>
+
+<div class="loading" *ngIf="isLoading">
+  Loading vehicle details...
+</div>

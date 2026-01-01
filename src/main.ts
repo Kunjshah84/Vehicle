@@ -4,6 +4,10 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { routes } from './app/app.routes';
 import { authInterceptor } from './app/core/interceptors/auth.interceptor';
+import { environment } from './environments/environment.prod';
+
+console.log(environment.production);
+console.log(environment.apiUrl);
 
 
 bootstrapApplication(AppComponent, {

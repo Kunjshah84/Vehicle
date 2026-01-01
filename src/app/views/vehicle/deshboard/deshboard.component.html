@@ -1,0 +1,115 @@
+<!-- <br>
+<p style="color: white;">In the deshboard</p>
+
+
+<button (click)="loadvehicales()">
+  Load Vehicles
+</button>
+
+<pre *ngIf="vehicles.length" style="color: white;">
+{{ vehicles | json }}
+</pre> -->
+
+<div class="layout">
+  <div class="body">
+    <aside class="sidebar">
+
+      <div class="filter-group search-group">
+      <label>Search Vehicle</label>
+      <input
+        type="text"
+        placeholder="Search by vehicle name"
+        [(ngModel)]="filters.search"
+      />
+    </div>
+
+      <div class="filter-group">
+        <label>Min Price</label>
+        <input type="number" [(ngModel)]="filters.minPrice" />
+
+        <label>Max Price</label>
+        <input type="number" [(ngModel)]="filters.maxPrice" />
+      </div>
+
+      <div class="filter-group">
+        <label>Fuel Type</label>
+        <div *ngFor="let fuel of fuelTypeOptions">
+          <input
+            type="checkbox"
+            [value]="fuel"
+            (change)="onCheckboxChange($event, 'fuelTypes')"
+          />
+          {{ fuel }}
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label>Body Type</label>
+        <div *ngFor="let body of bodyTypeOptions">
+          <input
+            type="checkbox"
+            [value]="body"
+            (change)="onCheckboxChange($event, 'bodyTypes')"
+          />
+          {{ body }}
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label>Min Engine</label>
+        <input type="number" step="0.1" [(ngModel)]="filters.minEngine" />
+
+        <label>Max Engine</label>
+        <input type="number" step="0.1" [(ngModel)]="filters.maxEngine" />
+      </div>
+
+      <div class="filter-group">
+        <label>Sort By</label>
+        <select [(ngModel)]="filters.sortBy">
+          <option [ngValue]="null">None</option>
+          <option value="PRICE_ASC">Price: Low → High</option>
+          <option value="PRICE_DESC">Price: High → Low</option>
+        </select>
+      </div>
+
+      <button class="apply-btn" (click)="applyFilters()">Apply</button>
+      <button class="reset-btn" (click)="resetFilters()">Reset</button>
+    </aside>
+
+
+    <main class="content">
+      <p *ngIf="isLoading" class="state-text">Loading vehicles...</p>
+      <p *ngIf="error" class="state-text error">{{ error }}</p>
+      <p *ngIf="!isLoading && vehicles.length === 0" class="state-text">
+        No vehicles available
+      </p>
+      <div class="vehicle-grid" *ngIf="!isLoading && vehicles.length > 0">
+        <div class="vehicle-card" *ngFor="let v of vehicles">
+          <img
+            [src]="v.thumbnail || 'assets/no-car.png'"
+            alt="Vehicle image"
+            class="vehicle-image"
+          />
+          <h3 class="title">
+            {{ v.vehicleName }} ({{ v.model }})
+          </h3>
+          <p class="meta">
+            {{ v.fuleType }} • {{ v.bodyType }} • {{ v.engine }}L
+          </p>
+          <p class="price">
+            ₹{{ v.basePrice | number }}
+          </p>
+          <p class="desc">
+            {{ v.shortDescription }}
+          </p>
+          <span class="stock" [class.out]="v.stockCount === 0">
+            {{ v.stockCount > 0 ? 'In Stock' : 'Out of Stock' }}
+          </span>
+          <button class="details-btn" (click)="goToVehicle(v.vehicalId)">
+            Show more
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

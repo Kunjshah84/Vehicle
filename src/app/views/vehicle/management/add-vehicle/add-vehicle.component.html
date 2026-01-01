@@ -1,0 +1,52 @@
+<form
+  [formGroup]="addVehicleForm"
+  (ngSubmit)="submit()"
+  class="add-vehicle-form"
+>
+  <h2>Add Vehicle</h2>
+
+  <div class="card">
+    <h3>Vehicle Details</h3>
+
+    <div class="grid">
+      <input type="text" placeholder="Vehicle Name" formControlName="vehicleName" />
+      <input type="text" placeholder="Model" formControlName="model" />
+      <input type="number" placeholder="Year Of Production" formControlName="yearOfProduction" />
+      <input type="number" placeholder="Base Price" formControlName="basePrice" />
+      <input type="number" placeholder="Stock Count" formControlName="stockCount" />
+    </div>
+
+    <textarea
+      placeholder="Short Description"
+      formControlName="shortDescription"
+      rows="3"
+    ></textarea>
+  </div>
+
+  <div class="card" formGroupName="specification">
+    <h3>Vehicle Specification</h3>
+
+    <div class="grid">
+      <input type="number" placeholder="Engine (cc)" formControlName="engine" />
+      <input type="text" placeholder="Power Of Vehicle" formControlName="powerOfVehical" />
+      <input type="text" placeholder="Torque" formControlName="torque" />
+      <input type="text" placeholder="Fuel Type" formControlName="fuelType" />
+      <input type="text" placeholder="Mileage" formControlName="mileage" />
+      <input type="text" placeholder="Body Type" formControlName="bodyType" />
+      <input type="number" placeholder="Seating Capacity" formControlName="seatingCapacity" />
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="submit" class="primary-btn">Add Vehicle</button>
+  </div>
+</form>
+
+<div *ngIf="successMessage" class="popup-toast success">
+  {{ successMessage }}
+</div>
+
+<div *ngIf="errorMessage" class="popup-toast error">
+  {{ errorMessage }}
+</div>
+
