@@ -1,0 +1,97 @@
+<div class="pending-requests-container">
+
+  <div class="gradient-bg">
+    <div class="gradient-orb orb-purple-1"></div>
+    <div class="gradient-orb orb-purple-2"></div>
+  </div>
+
+  <div class="header-section">
+    <div class="header-content">
+      <h1 class="page-title">Pending Ride Requests</h1>
+      <p class="page-subtitle">
+        Review and manage incoming booking requests
+      </p>
+      <p class="page-subtitle">
+        Accept/Reject req In 2 hrs after the req for booking of the ride because The ride is autometically gonna conform after 2hr of request
+      </p>
+      
+    </div>
+
+    <div class="stats-badge" *ngIf="bookings.length > 0">
+      <span class="pulse-dot"></span>
+      <span class="stats-count">{{ bookings.length }} Request</span>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loader-spinner"></div>
+    <p class="loading-text">Fetching requests...</p>
+  </div>
+
+  <!-- Cards -->
+  <div class="requests-grid" *ngIf="!loading && bookings.length > 0">
+
+    <div
+      class="request-card"
+      *ngFor="let booking of bookings; let i = index"
+      [style.animation-delay.ms]="i * 100"
+    >
+      <div class="card-glow"></div>
+
+      <!-- Header -->
+      <div class="card-header">
+        <span class="request-label">Pending Request</span>
+        <span class="timestamp">
+          {{ booking.bookingCreatedAt | date:'shortTime' }}
+        </span>
+      </div>
+
+      <!-- Vehicle -->
+      <div class="vehicle-pill">
+        {{ booking.vehicleName }}
+      </div>
+
+      <!-- Customer -->
+      <div class="customer-section">
+        <div class="customer-avatar">
+          {{ booking.customerName.charAt(0) }}
+        </div>
+        <div class="customer-details">
+          <h3>{{ booking.customerName }}</h3>
+          <span>Customer</span>
+        </div>
+      </div>
+
+      <!-- Details -->
+      <div class="booking-details">
+        <div class="detail">
+          <span>Date</span>
+          <strong>{{ booking.bookingDate }}</strong>
+        </div>
+        <div class="detail">
+          <span>Time Slot</span>
+          <strong>{{ formatSlot(booking.slotHour) }}</strong>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="action-buttons">
+        <button class="btn-accept" (click)="onAccept(booking.bookingId)">
+          Accept
+        </button>
+        <button class="btn-reject" (click)="onReject(booking.bookingId)">
+          Reject
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Empty -->
+  <div *ngIf="!loading && bookings.length === 0" class="empty-state">
+    <h3>No Pending Requests</h3>
+    <p>New ride requests will appear here.</p>
+  </div>
+
+</div>

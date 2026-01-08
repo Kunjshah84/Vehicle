@@ -1,0 +1,259 @@
+.pending-requests-container {
+  position: relative;
+  min-height: 100vh;
+  padding: 2.5rem;
+  background: #0d0d0d;
+  overflow: hidden;
+  color: #e5e7eb;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(40px); }
+}
+
+/* HEADER */
+.header-section {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.page-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+}
+
+.page-subtitle {
+  color: #9ca3af;
+}
+
+/* BADGE */
+.stats-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1.4rem;
+  border-radius: 999px;
+  background: rgba(106, 0, 255, 0.15);
+  border: 1px solid rgba(106, 0, 255, 0.4);
+}
+
+.pulse-dot {
+  width: 10px;
+  height: 10px;
+  background: #6a00ff;
+  border-radius: 50%;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* GRID */
+.requests-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.75rem;
+}
+
+/* CARD */
+.request-card {
+  position: relative;
+  background: rgba(20, 20, 20, 0.65);
+  border-radius: 20px;
+  padding: 1.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  animation: slideUp 0.5s ease-out backwards;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-8px);
+    border-color: #6a00ff;
+  }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* HEADER */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.request-label {
+  font-weight: 600;
+  color: #c4b5fd;
+}
+
+/* VEHICLE */
+.vehicle-pill {
+  margin: 1rem 0;
+  display: inline-block;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  background: rgba(106, 0, 255, 0.15);
+  color: #d8b4fe;
+  font-weight: 600;
+}
+
+/* CUSTOMER */
+.customer-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.customer-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #6a00ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.customer-details h3 {
+  margin: 0;
+}
+
+.customer-details span {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+/* DETAILS */
+.booking-details {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 14px;
+  padding: 1rem;
+  margin-bottom: 1.4rem;
+}
+
+.detail {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+
+  span {
+    color: #9ca3af;
+  }
+}
+
+/* ACTIONS */
+.action-buttons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.action-buttons button {
+  flex: 1;
+  height: 44px;
+  border-radius: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.25s ease;
+}
+
+.btn-accept {
+  background: rgb(79, 173, 79);
+  color: white;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.btn-reject {
+  background: #b73131;
+  color: white;
+  border: 1px solid #dc2626;
+
+  &:hover {
+    background: #dc2626;
+    color: white;
+  }
+}
+
+/* LOADING & EMPTY */
+.loading-container,
+.empty-state {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 4rem;
+  color: #9ca3af;
+}
+
+
+/* HEADER SECTION */
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* LEFT CONTENT */
+.header-content {
+  max-width: 720px;
+}
+
+/* MAIN TITLE */
+.page-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.02em;
+}
+
+/* SUBTITLE */
+.page-subtitle {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #9ca3af;
+  margin: 0 0 6px 0;
+
+  /* second paragraph = policy note */
+  &:last-child {
+    margin-top: 8px;
+    padding-left: 12px;
+    border-left: 3px solid #6a00ff;
+    color: #c4b5fd;
+    font-size: 0.9rem;
+  }
+}
+
+
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .header-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stats-badge {
+    align-self: flex-start;
+  }
+}

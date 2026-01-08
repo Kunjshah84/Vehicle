@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { AuthState, LoginResponse, RegisterDto, RegisterResponse } from '../../../shared/models/auth.model';
+import { HttpClient } from '@angular/common/http';
 
 
 
@@ -105,4 +105,23 @@ export class AuthService {
       this.authStateSubject.next({ ...currentState, token });
     }
   }
+
+  loadCurrentUser(): Observable<{ user: any }> {
+    return this.http.get<{ user: any }>(
+      `${this.API}/me`,
+      { withCredentials: true }
+    ).pipe(
+      tap(res => {
+        const token = this.getAccessToken();
+
+        if (!token) return;
+
+        this.authStateSubject.next({
+          token,
+          user: res.user
+        });
+      })
+    );
+  }
+
 }

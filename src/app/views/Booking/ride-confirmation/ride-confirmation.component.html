@@ -1,72 +1,167 @@
-<div class="booking-container" *ngIf="!isLoading && booking">
+<div class="booking-wrapper">
 
-  <div class="booking-card">
-
-    <div class="header">
-      <h1>Ride Confirmed</h1>
-      <span class="status confirmed">{{ booking.rideStatus }}</span>
+  <!-- STEP INDICATOR -->
+  <div class="steps" *ngIf="canBook && !bookingInfo">
+    <div class="step completed">
+      <div class="circle">1</div>
+      <span>Select Date</span>
     </div>
 
-    <div class="dates">
-      <div>
-        <span class="label">Start Date</span>
-        <span class="value">{{ booking.startDate }}</span>
-      </div>
-      <div>
-        <span class="label">End Date</span>
-        <span class="value">{{ booking.endDate }}</span>
-      </div>
+    <div class="divider"></div>
+
+    <div class="step" [class.active]="selectedDate">
+      <div class="circle">2</div>
+      <span>Select Slot</span>
     </div>
 
+    <div class="divider"></div>
+
+    <div class="step" [class.active]="selectedSlot !== null">
+      <div class="circle">3</div>
+      <span>Confirm</span>
+    </div>
+  </div>
+
+  <!-- ERROR -->
+  <div *ngIf="error" class="alert error-alert">
+    {{ error }}
+  </div>
+
+  <!-- BLOCKED STATE -->
+  <div *ngIf="!canBook && bookingInfo" class="blocked-card">
+    <h3>Active Booking Exists</h3>
+    <p class="blocked-sub">
+      You already have a booking for this vehicle. Details are shown below.
+    </p>
+
+    <div class="info-row">
+      <span>Status</span>
+      <strong>{{ bookingInfo.status }}</strong>
+    </div>
+
+    <div class="info-row">
+      <span>Date</span>
+      <strong>{{ formatDate(bookingInfo.bookingDate) }}</strong>
+    </div>
+
+    <div class="info-row">
+      <span>Time Slot</span>
+      <strong>{{ formatSlot(bookingInfo.slotHour) }}</strong>
+    </div>
+
+    <div class="info-row">
+      <span>Showroom</span>
+      <strong>{{ bookingInfo.showroomId }}</strong>
+    </div>
+
+    <p class="hint">
+      You cannot create another booking until the current one is completed or expires.
+    </p>
+  </div>
+
+  <!-- BOOKING FLOW -->
+  <div *ngIf="canBook" class="flow-card">
+
+    <!-- DATE -->
     <section class="section">
-      <h2>Vehicle Details</h2>
-      <p class="title">
-        {{ booking.vehicle.vehicleName }} {{ booking.vehicle.model }}
+      <h4>Select Date</h4>
+      <p class="section-desc">
+        Choose a date to view available time slots.
       </p>
-      <p class="muted">
-        {{ booking.vehicle.shortDescription }}
-      </p>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Select Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          [matDatepickerFilter]="dateFilter"
+          (dateChange)="onDateChange($event.value)"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <small class="helper-text">
+        Same-day bookings close 2 hours before the selected time slot.
+      </small>
     </section>
 
-    <section class="section">
-      <h2>User Details</h2>
-      <div class="grid">
-        <span>Name</span>
-        <span>{{ booking.user.fullName }}</span>
+    <!-- LOADING -->
+    <div *ngIf="loading" class="loading-state">
+      Loading available time slots…
+    </div>
 
-        <span>Email</span>
-        <span>{{ booking.user.email }}</span>
+    <!-- NO SLOTS -->
+    <div *ngIf="!loading && noSlotsAvailable" class="no-slots">
+      No available slots for this date. Please try another date.
+    </div>
 
-        <span>Contact</span>
-        <span>{{ booking.user.number }}</span>
+    <!-- SLOTS -->
+    <section *ngIf="availableSlots.length > 0" class="section">
+      <h4>Select Time Slot</h4>
+      <p class="section-desc">
+        Tap a time slot to continue.
+      </p>
+
+      <div class="slots-grid">
+        <div
+          class="slot-card"
+          *ngFor="let slot of availableSlots"
+          [class.selected]="selectedSlot === slot"
+          (click)="selectedSlot = slot"
+        >
+          {{ formatSlot(slot) }}
+          <span class="check" *ngIf="selectedSlot === slot">✓</span>
+        </div>
       </div>
     </section>
 
-    <section class="section">
-      <h2>Showroom</h2>
-      <div class="grid">
-        <span>Name</span>
-        <span>{{ booking.showroom.showroomName }}</span>
+    <!-- BOOKING SUMMARY -->
+    <section *ngIf="selectedDate && selectedSlot !== null" class="booking-summary-card">
 
-        <span>Location</span>
-        <span>{{ booking.showroom.showroomLocation }}</span>
+      <h3 class="summary-title">Booking Summary</h3>
 
-        <span>Contact</span>
-        <span>{{ booking.showroom.contactNumber }}</span>
+      <p class="summary-subtitle">
+        Please review your booking details before confirming.
+      </p>
+
+      <div class="summary-grid">
+        <div class="summary-item">
+          <span class="label">Date</span>
+          <span class="value">
+            {{ selectedDate | date:'EEE, MMM d, y' }}
+          </span>
+        </div>
+
+        <div class="summary-item">
+          <span class="label">Time Slot</span>
+          <span class="value">
+            {{ formatSlot(selectedSlot!) }}
+          </span>
+        </div>
       </div>
+
+      <p class="summary-warning">
+        Once confirmed, you won’t be able to create another booking for this vehicle
+        until the current one is completed or expires.
+      </p>
+
+      <button
+        class="confirm-booking-btn"
+        [disabled]="loading"
+        (click)="bookRide()"
+      >
+        {{ loading ? 'Reserving your slot…' : 'Confirm Booking' }}
+      </button>
+
     </section>
 
-    <div class="actions">
-      <button class="secondary" (click)="goBack()">
-        Back to Dashboard
-      </button>
-      <button class="printing-btn">
-        Download Receipt
-      </button>
+    <!-- STATUS -->
+    <div *ngIf="bookingStatus === 'PENDING'" class="pending-status-card">
+      <strong>Booking Submitted</strong>
+      <p>Your booking request has been created successfully.</p>
+      <span class="status-pill">PENDING</span>
     </div>
 
   </div>
 </div>
-
-<div *ngIf="isLoading" class="state-text">Processing booking...</div>
-<div *ngIf="error" class="state-text error">{{ error }}</div>

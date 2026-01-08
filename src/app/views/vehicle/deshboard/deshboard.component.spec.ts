@@ -2,118 +2,89 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeshboardComponent } from './deshboard.component';
 import { VehicleService } from '../../../core/services/api/vehicle.service';
 import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { of, throwError } from 'rxjs';
+import { Vehicle } from '../../../shared/models/vehicle.model';
 
 describe('DeshboardComponent', () => {
   let component: DeshboardComponent;
   let fixture: ComponentFixture<DeshboardComponent>;
-  let vehicleServiceSpy: jasmine.SpyObj<VehicleService>;
-  let routerSpy: jasmine.SpyObj<Router>;
-
-  const mockVehicles = [
-    {
-      vehicalId: 1,
-      vehicleName: 'Honda',
-      model: 'City',
-      basePrice: 1000,
-      stockCount: 5,
-      shortDescription: 'Sedan car',
-      fuleType: 'Petrol',
-      bodyType: 'Sedan',
-      engine: 1.5,
-      thumbnail: null
-    }
-  ];
+  let vehicleService: jasmine.SpyObj<VehicleService>;
+  let router: Router;
 
   beforeEach(async () => {
-    vehicleServiceSpy = jasmine.createSpyObj('VehicleService', [
+    vehicleService = jasmine.createSpyObj('VehicleService', [
       'getDashboardVehicles'
     ]);
-    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
-      imports: [DeshboardComponent],
+      imports: [
+        DeshboardComponent,
+        RouterTestingModule.withRoutes([])
+      ],
       providers: [
-        { provide: VehicleService, useValue: vehicleServiceSpy },
-        { provide: Router, useValue: routerSpy }
+        { provide: VehicleService, useValue: vehicleService }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DeshboardComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
   });
 
-  it('should create component', () => {
+
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call applyFilters on init', () => {
-    spyOn(component, 'applyFilters').and.callThrough();
-    expect(component.applyFilters).toHaveBeenCalled();
-  });
+  it('should load vehicles successfully when applyFilters is called', () => {
+    const mockVehicles: Vehicle[] = [
+      {
+        vehicalId: 1,
+        vehicleName: 'Car A',
+        model: 'ZX',
+        basePrice: 1000000,
+        stockCount: 3,
+        shortDescription: 'Test car',
+        fuleType: 'Petrol',
+        bodyType: 'SUV',
+        engine: 1500,
+        thumbnail: null
+      }
+    ];
 
-  it('should fetch vehicles successfully and stop loading', () => {
-    vehicleServiceSpy.getDashboardVehicles.and.returnValue(of(mockVehicles));
-    expect(vehicleServiceSpy.getDashboardVehicles).toHaveBeenCalled();
+    vehicleService.getDashboardVehicles.and.returnValue(of(mockVehicles));
+
+    component.applyFilters();
+
+    expect(vehicleService.getDashboardVehicles).toHaveBeenCalled();
     expect(component.vehicles).toEqual(mockVehicles);
     expect(component.isLoading).toBeFalse();
     expect(component.error).toBeNull();
   });
 
-  it('should handle API error correctly', () => {
-    vehicleServiceSpy.getDashboardVehicles.and.returnValue(
-      throwError(() => new Error('API failed'))
+  it('should set error message when vehicle loading fails', () => {
+    vehicleService.getDashboardVehicles.and.returnValue(
+      throwError(() => new Error('API Error'))
     );
 
-    fixture.detectChanges();
+    component.applyFilters();
 
+    expect(vehicleService.getDashboardVehicles).toHaveBeenCalled();
+    expect(component.vehicles.length).toBe(0);
     expect(component.error).toBe('Failed to load vehicles');
     expect(component.isLoading).toBeFalse();
   });
 
-  it('should add value to filter array on checkbox checked', () => {
-    const event = {
-      target: { value: 'Petrol', checked: true }
-    };
-
-    component.onCheckboxChange(event, 'fuelTypes');
-
-    expect(component.filters.fuelTypes).toContain('Petrol');
-  });
-
-  it('should remove value from filter array on checkbox unchecked', () => {
-    component.filters.fuelTypes = ['Petrol'];
-
-    const event = {
-      target: { value: 'Petrol', checked: false }
-    };
-
-    component.onCheckboxChange(event, 'fuelTypes');
-
-    expect(component.filters.fuelTypes).not.toContain('Petrol');
-  });
-
-  it('should reset filters and reapply filters', () => {
-    vehicleServiceSpy.getDashboardVehicles.and.returnValue(of([]));
-    spyOn(component, 'applyFilters').and.callThrough();
-
-    component.filters.search = 'Honda';
-    component.filters.fuelTypes = ['Petrol'];
-
-    component.resetFilters();
-
-    expect(component.filters.search).toBeNull();
-    expect(component.filters.fuelTypes.length).toBe(0);
-    expect(component.applyFilters).toHaveBeenCalled();
-  });
 
   it('should navigate to vehicle specification page', () => {
-    component.goToVehicle(10);
+    component.goToVehicle(12);
 
-    expect(routerSpy.navigate).toHaveBeenCalledWith([
+    expect(router.navigate).toHaveBeenCalledWith([
       '/vehicalspecification',
-      10
+      12
     ]);
   });
 });

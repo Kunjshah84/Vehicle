@@ -1,47 +1,25 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RideConfirmationComponent } from './ride-confirmation.component';
-import { BookingService } from '../../../core/services/api/booking.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { BookRideComponent } from './ride-confirmation.component';
+import { RideBookingService } from '../../../core/services/api/ride-booking.service';
+import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
 
-describe('RideConfirmationComponent', () => {
-  let component: RideConfirmationComponent;
-  let fixture: ComponentFixture<RideConfirmationComponent>;
-  let bookingServiceSpy: jasmine.SpyObj<BookingService>;
-  let routerSpy: jasmine.SpyObj<Router>;
-
-  const mockBooking = {
-    rideStatus: 'Confirmed',
-    startDate: '2025-01-01',
-    endDate: '2025-01-03',
-    user: {
-      fullName: "any",
-    email: "any",
-    number: "any"
-    },
-    vehicle: {
-      vehicleId: 1,
-      vehicleName: "any",
-      model: "any",
-      shortDescription: "any"
-    },
-    showroom:{
-      showroomId: 1,
-      showroomName: "any",
-      showroomLocation: "any",
-      contactNumber: "any",
-      managerNumber: "any"
-    }
-  };
+describe('BookRideComponent', () => {
+  let component: BookRideComponent;
+  let fixture: ComponentFixture<BookRideComponent>;
+  let rideBookingService: jasmine.SpyObj<RideBookingService>;
 
   beforeEach(async () => {
-    bookingServiceSpy = jasmine.createSpyObj('BookingService', ['bookRide']);
-    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+    const rideBookingSpy = jasmine.createSpyObj('RideBookingService', [
+      'canBook',
+      'getAvailableSlots',
+      'createBooking'
+    ]);
 
     await TestBed.configureTestingModule({
-      imports: [RideConfirmationComponent],
+      imports: [BookRideComponent],
       providers: [
-        { provide: BookingService, useValue: bookingServiceSpy },
+        { provide: RideBookingService, useValue: rideBookingSpy },
         {
           provide: ActivatedRoute,
           useValue: {
@@ -51,42 +29,66 @@ describe('RideConfirmationComponent', () => {
               }
             }
           }
-        },
-        { provide: Router, useValue: routerSpy }
+        }
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RideConfirmationComponent);
+    fixture = TestBed.createComponent(BookRideComponent);
     component = fixture.componentInstance;
+    rideBookingService = TestBed.inject(
+      RideBookingService
+    ) as jasmine.SpyObj<RideBookingService>;
+
+    rideBookingService.canBook.and.returnValue(of({ canBook: true }));
     fixture.detectChanges();
   });
 
-  it('should create component', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call bookRide with vehicleId from route', () => {
-    bookingServiceSpy.bookRide.and.returnValue(of(mockBooking));
-    expect(bookingServiceSpy.bookRide).toHaveBeenCalledWith(5);
+  it('should read vehicleId from route params', () => {
+    expect(component.vehicleId).toBe(5);
   });
 
-  it('should set booking and stop loading on success', () => {
-    bookingServiceSpy.bookRide.and.returnValue(of(mockBooking));
-    expect(component.booking).toEqual(mockBooking);
-    expect(component.isLoading).toBeFalse();
+  it('should allow booking when canBook API returns true', () => {
+    component.checkCanBook();
+
+    expect(rideBookingService.canBook).toHaveBeenCalledWith(5);
+    expect(component.canBook).toBeTrue();
     expect(component.error).toBeNull();
   });
 
-  it('should set error message on API failure', () => {
-    bookingServiceSpy.bookRide.and.returnValue(
-      throwError(() => new Error('API failed'))
+  it('should handle error when canBook API fails', () => {
+    rideBookingService.canBook.and.returnValue(
+      throwError(() => ({ error: { message: 'Error occurred' } }))
     );
-    expect(component.error).toBe('Failed to book ride');
-    expect(component.isLoading).toBeFalse();
+
+    component.checkCanBook();
+
+    expect(component.error).toBe('Error occurred');
   });
 
-  it('should navigate back to vehicles on goBack()', () => {
-    component.goBack();
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/vehicles']);
+  it('should load available slots on date change', () => {
+    const testDate = new Date('2026-01-10');
+    rideBookingService.getAvailableSlots.and.returnValue(of([9, 10, 11]));
+
+    component.onDateChange(testDate);
+
+    expect(rideBookingService.getAvailableSlots).toHaveBeenCalled();
+    expect(component.availableSlots.length).toBe(3);
+    expect(component.noSlotsAvailable).toBeFalse();
+  });
+
+  it('should create booking and set status to PENDING', () => {
+    component.selectedDate = new Date('2026-01-10');
+    component.selectedSlot = 10;
+
+    rideBookingService.createBooking.and.returnValue(of({}));
+
+    component.bookRide();
+
+    expect(rideBookingService.createBooking).toHaveBeenCalled();
+    expect(component.bookingStatus).toBe('PENDING');
   });
 });

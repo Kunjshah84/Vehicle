@@ -1,4 +1,31 @@
-<h3 class="page-title">My Showroom Vehicles</h3>
+<div class="page-header">
+
+  <h3 class="page-title">My Showroom Vehicles</h3>
+
+  <div class="controls">
+
+    <div class="search-box">
+      <input
+        type="text"
+        placeholder="Search vehicle by name..."
+        [(ngModel)]="searchText"
+      />
+      <button class="search-btn" (click)="onSearch()">
+        Search
+      </button>
+    </div>
+
+    <button
+      class="add-btn"
+      (click)="goToAddVehicle()"
+    >
+      + Add Vehicle
+    </button>
+
+
+  </div>
+
+</div>
 
 <div class="vehicles-grid">
   <div class="vehicle-card" *ngFor="let vehicle of vehicles">

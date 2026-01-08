@@ -18,6 +18,12 @@
       >
         Manage Vehicles
       </li>
+
+        <button class="MyBooking" *ngIf="isUser" routerLink="/my-bookings">
+          My Bookings
+        </button>
+
+
       <li
         routerLink="/dashboard"
         routerLinkActive="active"

@@ -3,17 +3,21 @@ import { NgFor } from '@angular/common';
 import { Router } from '@angular/router';
 import { ManagerService } from '../../../../core/services/api/manager.service';
 import { ManagerVehicle } from '../../../../shared/models/Manager/manager-vehicle.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-show-vehicles',
   standalone: true,
-  imports: [NgFor],
+  imports: [NgFor, FormsModule],
   templateUrl: './show-vehicles.component.html',
   styleUrl: './show-vehicles.component.scss'
 })
 export class ShowVehiclesComponent implements OnInit {
 
   vehicles: ManagerVehicle[] = [];
+  allVehicles: ManagerVehicle[] = [];
+
+  searchText: string = '';
 
   constructor(
     private managerService: ManagerService,
@@ -23,6 +27,7 @@ export class ShowVehiclesComponent implements OnInit {
   ngOnInit(): void {
     this.managerService.getMyShowroomVehicles().subscribe({
       next: (res) => {
+        this.allVehicles = res;
         this.vehicles = res;
       },
       error: (err) => {
@@ -31,17 +36,32 @@ export class ShowVehiclesComponent implements OnInit {
     });
   }
 
+  onSearch(): void {
+    const query = this.searchText.trim().toLowerCase();
+
+    if (!query) {
+      // If search box empty → show all vehicles
+      this.vehicles = this.allVehicles;
+      return;
+    }
+
+    this.vehicles = this.allVehicles.filter(v =>
+      v.vehicleName.toLowerCase().startsWith(query)
+    );
+  }
+
   onDelete(vehicleId: number): void {
     const confirmed = confirm(
       `Are you sure you want to delete vehicle ID ${vehicleId}?`
     );
 
-    if (!confirmed) {
-      return;
-    }
+    if (!confirmed) return;
 
     this.managerService.deleteVehicle(vehicleId).subscribe({
       next: () => {
+        this.allVehicles = this.allVehicles.filter(
+          v => v.vehicalId !== vehicleId
+        );
         this.vehicles = this.vehicles.filter(
           v => v.vehicalId !== vehicleId
         );
@@ -59,5 +79,9 @@ export class ShowVehiclesComponent implements OnInit {
       vehicleId,
       'edit'
     ]);
+  }
+
+  goToAddVehicle(): void {
+    this.router.navigate(['/vehicle-management/add-vehicle']);
   }
 }

@@ -18,6 +18,7 @@ export interface VehicleDetails {
   vehicleName: string;
   model: string;
   yearOfProduction: number;
+  ageInShowroom: string; 
   basePrice: number;
   stockCount: number;
   shortDescription: string;

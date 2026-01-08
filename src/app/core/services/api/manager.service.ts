@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable, switchMap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ManagerVehicle } from '../../../shared/models/Manager/manager-vehicle.model';
 import { CreateVehicle } from '../../../shared/models/Manager/create-vehicle.model';
 import { CreateVehicleSpecification } from '../../../shared/models/Manager/create-vehicle-spec.model';
 import { UpdateVehicleWithSpec } from '../../../shared/models/Manager/update-vehicle-with-spec.model';
-import { CreateVehicleImage } from '../../../shared/models/Manager/create-vehicle-image.model';
-import { VehicleImageSe } from '../../../shared/models/Manager/vehicle-image.model';
 import { AddVehicleImageResponse } from '../../../shared/models/Manager/add-vehicle-image-response.model';
+import { UpdateVehicleResponse } from '../../../shared/models/Manager/update-vehicle-response.model';
+import { SaveImageVehicleResponse } from '../../../shared/models/Manager/saveVehicleImagesResponceDto';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -23,13 +23,9 @@ export class ManagerService {
     return this.http.get<ManagerVehicle[]>(`${this.baseUrl}/vehicles`);
   }
 
-  createVehicleWithSpec(
-    vehicle: CreateVehicle,
-    spec: CreateVehicleSpecification
-  ): Observable<any> {
-
-    return this.http.post<any>(`${this.baseUrl}/vehicleadd`, vehicle);
-  }
+  createVehicleWithSpec(payload: any): Observable<any> {
+  return this.http.post<any>(`${this.baseUrl}/vehicleadd`, payload);
+}
 
   deleteVehicle(vehicleId: number): Observable<any> {
     return this.http.delete<any>(
@@ -37,26 +33,33 @@ export class ManagerService {
     );
   }
 
-  updateVehicle(vehicleId: number,payload: UpdateVehicleWithSpec): Observable<any> {
-    return this.http.put(
+  updateVehicle(vehicleId: number,payload: UpdateVehicleWithSpec): Observable<UpdateVehicleResponse> {
+    return this.http.put<UpdateVehicleResponse>(
       `${this.baseUrl}/editvehicle/${vehicleId}`,
       payload
     );
   }
-
-  addVehicleImage(
-    vehicleId: number,
-    payload: CreateVehicleImage
-  ): Observable<AddVehicleImageResponse> {
-    return this.http.post<AddVehicleImageResponse>(
+  
+  saveVehicleImages(vehicleId: number, images: any[]):Observable<SaveImageVehicleResponse> {
+    return this.http.post<SaveImageVehicleResponse>(
       `${this.baseUrl}/vehicles/${vehicleId}/images`,
-      payload
+      {
+        images: images
+      }
     );
   }
+
+
 
   deleteVehicleImage(imageId: number) {
     return this.http.delete(
       `${this.baseUrl}/vehicles/images/${imageId}`
+    );
+  }
+
+  getVehicleImages(vehicleId: number) {
+    return this.http.get<AddVehicleImageResponse>(
+      `${this.baseUrl}/vehicles/getImg/${vehicleId}/images`
     );
   }
 }

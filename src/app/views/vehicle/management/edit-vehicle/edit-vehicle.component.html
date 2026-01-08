@@ -1,122 +1,110 @@
 <div class="edit-vehicle-page" *ngIf="!isLoading">
-
-  <h1 class="page-title">Edit Vehicle</h1>
-
-    <button
-        type="button"
-        class="back-btn"
-        (click)="goBack()"
-        >
-         Back
-    </button>
-
+  <div class="header">
+    <h1>Edit Vehicle</h1>
+    <button class="back-btn" (click)="goBack()">Back</button>
+  </div>
 
   <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
+    <section class="card main-edit-card">
+      <h2 class="card-title">Vehicle Information</h2>
 
-    <section class="card">
-      <h2 class="card-title">Vehicle Details</h2>
+      <div class="sub-card">
+        <h3 class="sub-title">Vehicle Details</h3>
 
-      <div class="grid grid-3">
-        <input
-          type="text"
-          placeholder="Vehicle Name"
-          formControlName="vehicleName"
-        />
+        <div class="grid grid-2">
+          <div class="field-container">
+            <label>Vehicle Name</label>
+            <input type="text" formControlName="vehicleName" />
+            <small class="error-text" *ngIf="vehicleForm.get('vehicleName')?.touched && vehicleForm.get('vehicleName')?.invalid">Name is required (min 2 chars)</small>
+          </div>
+          <div class="field-container">
+            <label>Model</label>
+            <input type="text" formControlName="model" />
+          </div>
+        </div>
 
-        <input
-          type="text"
-          placeholder="Model"
-          formControlName="model"
-        />
+        <div class="grid grid-2">
+          <div class="field-container">
+            <label>Year of Production</label>
+            <input type="number" formControlName="yearOfProduction" oninput="if(this.value.length>4)this.value=this.value.slice(0,4)" />
+          </div>
+          <div class="field-container">
+            <label>Age In Showroom</label>
+            <input type="date" formControlName="ageInShowroom" class="custom-date-picker" />
+            <small class="error-text" *ngIf="vehicleForm.get('ageInShowroom')?.hasError('futureDate')">Cannot select a future date</small>
+          </div>
+        </div>
 
-        <input
-          type="number"
-          placeholder="Year Of Production"
-          formControlName="yearOfProduction"
-        />
+        <div class="grid grid-2">
+          <div class="field-container">
+            <label>Base Price</label>
+            <input type="number" formControlName="basePrice" />
+          </div>
+          <div class="field-container">
+            <label>Stock Count</label>
+            <input type="number" formControlName="stockCount" />
+          </div>
+        </div>
+
+        <div class="field-container">
+          <label>Short Description</label>
+          <textarea formControlName="shortDescription"></textarea>
+        </div>
       </div>
 
-      <div class="grid grid-2">
-        <input
-          type="number"
-          placeholder="Base Price"
-          formControlName="basePrice"
-        />
-
-        <input
-          type="number"
-          placeholder="Stock Count"
-          formControlName="stockCount"
-        />
+      <div class="sub-card">
+        <h3 class="sub-title">Vehicle Specifications</h3>
+        <div class="grid grid-2">
+          <div class="field-container"><label>Engine (cc)</label><input type="number" formControlName="engine" /></div>
+          <div class="field-container"><label>Power</label><input type="text" formControlName="powerOfVehical" /></div>
+        </div>
+        <div class="grid grid-2">
+          <div class="field-container"><label>Torque</label><input type="text" formControlName="torque" /></div>
+          <div class="field-container"><label>Fuel Type</label><input type="text" formControlName="fuelType" /></div>
+        </div>
+        <div class="grid grid-2">
+          <div class="field-container"><label>Mileage</label><input type="text" formControlName="mileage" /></div>
+          <div class="field-container"><label>Body Type</label><input type="text" formControlName="bodyType" /></div>
+        </div>
+        <div class="field-container">
+          <label>Seating Capacity</label>
+          <input type="number" formControlName="seatingCapacity" />
+        </div>
       </div>
 
-      <textarea
-        placeholder="Short Description"
-        formControlName="shortDescription"
-      ></textarea>
-    </section>
-
-    <section class="card">
-      <h2 class="card-title">Vehicle Specification</h2>
-
-      <div class="grid grid-3">
-        <input
-          type="number"
-          placeholder="Engine (cc)"
-          formControlName="engine"
-        />
-
-        <input
-          type="text"
-          placeholder="Power Of Vehicle"
-          formControlName="powerOfVehical"
-        />
-
-        <input
-          type="text"
-          placeholder="Torque"
-          formControlName="torque"
-        />
-      </div>
-
-      <div class="grid grid-3">
-        <input
-          type="text"
-          placeholder="Fuel Type"
-          formControlName="fuelType"
-        />
-
-        <input
-          type="text"
-          placeholder="Mileage"
-          formControlName="mileage"
-        />
-
-        <input
-          type="text"
-          placeholder="Body Type"
-          formControlName="bodyType"
-        />
-      </div>
-
-      <div class="grid grid-1">
-        <input
-          type="number"
-          placeholder="Seating Capacity"
-          formControlName="seatingCapacity"
-        />
+      <div class="centered-actions">
+        <p class="error-notice" *ngIf="vehicleForm.invalid">Please fill all the info correctly to save changes.</p>
+        <button type="submit" class="primary-btn" [class.not-allowed]="vehicleForm.invalid" [disabled]="vehicleForm.invalid">
+          Save Vehicle Changes
+        </button>
       </div>
     </section>
-    <div class="actions">
-      <button type="submit" class="primary-btn">
-        Save Changes
-      </button>
-    </div>
-
   </form>
 
-</div>
+  <section class="card image-card">
+    <h2 class="card-title">Vehicle Images</h2>
+    <div class="sub-card">
+      <h3 class="sub-title">Add Images</h3>
+      <input type="file" accept="image/*" multiple (change)="onFileSelected($event)" [disabled]="isUploading" class="file-input" />
+      <div class="centered-actions">
+        <button class="primary-btn" (click)="uploadImages()" [disabled]="selectedFiles.length === 0 || isUploading">
+          {{ isUploading ? 'Uploading...' : 'Upload Images' }}
+        </button>
+      </div>
+    </div>
 
-<div class="loading" *ngIf="isLoading">
-  Loading vehicle details...
+    <div class="sub-card" *ngIf="images.length > 0">
+      <h3 class="sub-title">Image Preview (Drag to Sort)</h3>
+      <div class="image-grid" cdkDropList (cdkDropListDropped)="onDrop($event)">
+        <div class="image-tile" *ngFor="let img of images; let i = index" cdkDrag>
+          <img [src]="img.imageLocation" />
+          <div class="meta"><span>#{{ i + 1 }}</span><span>Sort: {{ img.sortOrder }}</span></div>
+          <button class="delete-btn" (click)="removeImage(i)">Delete</button>
+        </div>
+      </div>
+      <div class="centered-actions mt-24">
+        <button class="primary-btn" (click)="saveImages()">Save Images Sequence</button>
+      </div>
+    </div>
+  </section>
 </div>

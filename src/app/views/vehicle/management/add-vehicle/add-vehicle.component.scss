@@ -1,86 +1,211 @@
-.add-vehicle-form {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 24px;
-  background: #0d0d0d;
-  color: #ffffff;
+:host {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #0d0d0d;
+  color: #ffffff toggle;
+  padding: 32px;
+}
 
-  h2 {
-    font-size: 28px;
-    margin-bottom: 24px;
-    padding-left: 12px;
-  }
+.add-vehicle-form {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+h2 {
+  font-size: 28px;
+  font-weight: 600;
 }
 
 .card {
-  background: #141414;
-  border: 1px solid #222;
-  border-radius: 12px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.04),
+    rgba(255, 255, 255, 0.02)
+  );
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+.card-title {
+  font-size: 22px;
+  margin-bottom: 24px;
+  color: white;
+}
+
+.sub-card {
+  background-color: #141414;
+  border-radius: 14px;
   padding: 20px;
   margin-bottom: 24px;
+}
 
-  h3 {
-    margin-bottom: 16px;
-    font-size: 20px;
-    color: #ffffff; //
-  }
+.sub-title {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: white;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 16px;
+  margin-bottom: 16px;
+}
+
+.grid-2 {
+  grid-template-columns: repeat(2, 1fr);
 }
 
 input,
 textarea {
   width: 100%;
-  padding: 12px 14px;
-  background: #0d0d0d;
-  border: 1px solid #333;
-  border-radius: 8px;
+  background-color: #0d0d0d;
+  border: 1px solid #2a2a2a;
   color: #ffffff;
+  padding: 14px 16px;
+  border-radius: 12px;
   font-size: 14px;
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-
-  &::placeholder {
-    color: #888;
-  }
-
-  &:focus {
-    border-color: #6a00ff;
-    box-shadow: 0 0 0 1px rgba(106, 0, 255, 0.5);
-  }
 }
 
 textarea {
-  margin-top: 16px;
+  min-height: 110px;
   resize: vertical;
 }
 
-.actions {
-  display: flex;
-  justify-content: flex-end;
+input::placeholder,
+textarea::placeholder {
+  color: #9a9a9a;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #7c3aed;
+  outline: none;
 }
 
 .primary-btn {
-  background: #6a00ff;
+  display: block;
+  margin-top: 16px;
+  background: #7c3aed;
   color: #ffffff;
   border: none;
-  padding: 12px 26px;
-  font-size: 15px;
-  border-radius: 10px;
-  cursor: pointer;
+  padding: 14px 26px;
   font-weight: 600;
-  transition: background 0.2s ease, transform 0.1s ease;
-
-  &:hover {
-    background: #7b1bff;
-  }
-
-  &:active {
-    transform: scale(0.97);
-  }
+  border-radius: 14px;
+  cursor: pointer;
 }
 
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.image-tile {
+  background-color: #1b1b1b;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.image-tile img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.meta {
+  font-size: 13px;
+  color: #bdbdbd;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.delete-btn {
+  width: 100%;
+  background-color: #2a2a2a;
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background-color: #b91c1c;
+  color: #fff;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 28px;
+}
+
+.back-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ccc;
+  padding: 12px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.popup-toast {
+  animation: fadeOut 1.2s ease forwards;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.selected-files {
+  margin-top: 12px;
+  color: #e5e7eb;
+}
+
+.selected-files .title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.file-names {
+  font-size: 14px;
+  opacity: 0.9;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.file-names span {
+  white-space: nowrap;
+}
+
+.hint {
+  margin-top: 6px;
+  font-size: 13px;
+  opacity: 0.65;
+  font-style: italic;
+}
+
+
+.error {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #f87171;
+}
+
+.not-allowed {
+  cursor: not-allowed;
+  opacity: 0.75;
+}

@@ -18,7 +18,7 @@ import { AuthService } from '../../../core/services/api/auth.service';
 })
 export class LoginComponent {
 
-  showPassword = false;
+  showPassword = true;
 
   loginForm = new FormGroup({
     email: new FormControl('', [

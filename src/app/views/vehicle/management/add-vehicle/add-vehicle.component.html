@@ -1,52 +1,244 @@
-<form
-  [formGroup]="addVehicleForm"
-  (ngSubmit)="submit()"
-  class="add-vehicle-form"
->
-  <h2>Add Vehicle</h2>
-
-  <div class="card">
-    <h3>Vehicle Details</h3>
-
-    <div class="grid">
-      <input type="text" placeholder="Vehicle Name" formControlName="vehicleName" />
-      <input type="text" placeholder="Model" formControlName="model" />
-      <input type="number" placeholder="Year Of Production" formControlName="yearOfProduction" />
-      <input type="number" placeholder="Base Price" formControlName="basePrice" />
-      <input type="number" placeholder="Stock Count" formControlName="stockCount" />
-    </div>
-
-    <textarea
-      placeholder="Short Description"
-      formControlName="shortDescription"
-      rows="3"
-    ></textarea>
-  </div>
-
-  <div class="card" formGroupName="specification">
-    <h3>Vehicle Specification</h3>
-
-    <div class="grid">
-      <input type="number" placeholder="Engine (cc)" formControlName="engine" />
-      <input type="text" placeholder="Power Of Vehicle" formControlName="powerOfVehical" />
-      <input type="text" placeholder="Torque" formControlName="torque" />
-      <input type="text" placeholder="Fuel Type" formControlName="fuelType" />
-      <input type="text" placeholder="Mileage" formControlName="mileage" />
-      <input type="text" placeholder="Body Type" formControlName="bodyType" />
-      <input type="number" placeholder="Seating Capacity" formControlName="seatingCapacity" />
-    </div>
-  </div>
-
-  <div class="actions">
-    <button type="submit" class="primary-btn">Add Vehicle</button>
-  </div>
-</form>
-
 <div *ngIf="successMessage" class="popup-toast success">
   {{ successMessage }}
 </div>
 
+<form
+  [formGroup]="addVehicleForm"
+  (ngSubmit)="finalSave()"
+  class="add-vehicle-form"
+>
+
+  <h2>Add Vehicle</h2>
+
+  <!-- VEHICLE DETAILS -->
+  <section class="card">
+    <h3 class="card-title">Vehicle Details</h3>
+
+    <div class="sub-card">
+      <div class="grid grid-2">
+        <div>
+          <input
+            type="text"
+            placeholder="Vehicle Name"
+            formControlName="vehicleName"
+          />
+          <small class="error" *ngIf="isInvalid('vehicleName')">
+            Vehicle name is required (min 2 characters)
+          </small>
+        </div>
+
+        <div>
+          <input
+            type="text"
+            placeholder="Model"
+            formControlName="model"
+          />
+          <small class="error" *ngIf="isInvalid('model')">
+            Model is required
+          </small>
+        </div>
+      </div>
+
+      <!-- ✅ MANUFACTURE YEAR (YYYY) -->
+      <div>
+        <input
+          type="number"
+          placeholder="Manufacture Year (YYYY)"
+          formControlName="yearOfProduction"
+        />
+        <small class="error" *ngIf="isInvalid('yearOfProduction')">
+          Enter valid manufacture year
+        </small>
+      </div>
+      <br>
+      <div class="grid grid-2">
+        <div>
+          <input
+            type="date"
+            formControlName="ageInShowroom"
+            [max]="today"
+            style="color-scheme: dark"
+          />
+          <small class="error" *ngIf="isInvalid('ageInShowroom')">
+            Showroom entry date is required
+          </small>
+        </div>
+
+        <div>
+          <input
+            type="number"
+            placeholder="Stock Count"
+            formControlName="stockCount"
+          />
+          <small class="error" *ngIf="isInvalid('stockCount')">
+            Stock count cannot be negative
+          </small>
+        </div>
+      </div>
+
+      <div>
+        <input
+          type="number"
+          placeholder="Base Price"
+          formControlName="basePrice"
+        />
+        <small class="error" *ngIf="isInvalid('basePrice')">
+          Base price must be greater than 0
+        </small>
+      </div>
+
+      <br />
+
+      <div>
+        <textarea
+          placeholder="Short Description (max 200 characters)"
+          formControlName="shortDescription"
+        ></textarea>
+        <small class="error" *ngIf="isInvalid('shortDescription')">
+          Maximum 200 characters allowed
+        </small>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPEC -->
+  <section class="card" formGroupName="specification">
+    <h3 class="card-title">Vehicle Specifications</h3>
+
+    <div class="sub-card">
+      <div class="grid grid-2">
+        <div>
+          <input type="number" placeholder="Engine (cc)" formControlName="engine" />
+          <small class="error" *ngIf="isInvalid('specification.engine')">
+            Engine must be greater than 0
+          </small>
+        </div>
+
+        <div>
+          <input type="number" placeholder="Power" formControlName="powerOfVehical" />
+          <small class="error" *ngIf="isInvalid('specification.powerOfVehical')">
+            Power must be greater than 0
+          </small>
+        </div>
+      </div>
+
+      <div class="grid grid-2">
+        <div>
+          <input type="number" placeholder="Torque" formControlName="torque" />
+          <small class="error" *ngIf="isInvalid('specification.torque')">
+            Torque must be greater than 0
+          </small>
+        </div>
+
+        <div>
+          <input type="text" placeholder="Fuel Type" formControlName="fuelType" />
+          <small class="error" *ngIf="isInvalid('specification.fuelType')">
+            Fuel type is required
+          </small>
+        </div>
+      </div>
+
+      <div class="grid grid-2">
+        <div>
+          <input type="number" placeholder="Mileage" formControlName="mileage" />
+          <small class="error" *ngIf="isInvalid('specification.mileage')">
+            Mileage must be greater than 0
+          </small>
+        </div>
+
+        <div>
+          <input type="text" placeholder="Body Type" formControlName="bodyType" />
+          <small class="error" *ngIf="isInvalid('specification.bodyType')">
+            Body type is required
+          </small>
+        </div>
+      </div>
+
+      <div>
+        <input
+          type="number"
+          placeholder="Seating Capacity"
+          formControlName="seatingCapacity"
+        />
+        <small class="error" *ngIf="isInvalid('specification.seatingCapacity')">
+          Seating capacity must be greater than 0
+        </small>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMAGES -->
+  <section class="card image-card">
+    <h3 class="card-title">Vehicle Images</h3>
+
+    <div class="sub-card">
+      <input
+        type="file"
+        multiple
+        accept="image/png,image/jpeg,image/jpg,image/webp"
+        (change)="onFileSelected($event)"
+        [disabled]="isUploading"
+      />
+
+      <div class="selected-files" *ngIf="selectedFiles.length > 0">
+        <p class="title">Selected Images:</p>
+        <div class="file-names">
+          <span *ngFor="let file of selectedFiles; let last = last">
+            {{ file.name }}<span *ngIf="!last">,</span>
+          </span>
+        </div>
+        <p class="hint">
+          Click on <strong>Upload Images</strong> to preview and reorder
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="primary-btn"
+        (click)="uploadImages()"
+        [disabled]="selectedFiles.length === 0 || isUploading"
+      >
+        {{ isUploading ? 'Uploading...' : 'Upload Images' }}
+      </button>
+    </div>
+
+    <div class="sub-card" *ngIf="images.length > 0">
+      <h3 class="sub-title">Image Preview</h3>
+
+      <div class="image-grid" cdkDropList (cdkDropListDropped)="onDrop($event)">
+        <div class="image-tile" *ngFor="let img of images; let i = index" cdkDrag>
+          <img [src]="img.imageLocation" />
+          <div class="meta">
+            <span>#{{ img.sortOrder }}</span>
+          </div>
+          <button type="button" class="delete-btn" (click)="removeImage(i)">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <p class="error" *ngIf="addVehicleForm.invalid && addVehicleForm.touched">
+      Please fulfill all the requirements before adding the vehicle.
+    </p>
+  </section>
+
+  <div class="form-actions">
+    <button type="button" class="back-btn" (click)="goBackToShowVehicles()">
+      ← Back
+    </button>
+
+    <button
+      type="submit"
+      class="primary-btn"
+      [ngClass]="{ 'not-allowed': isFormInvalid }"
+    >
+      Save Vehicle
+    </button>
+  </div>
+
+</form>
+
 <div *ngIf="errorMessage" class="popup-toast error">
   {{ errorMessage }}
 </div>
-

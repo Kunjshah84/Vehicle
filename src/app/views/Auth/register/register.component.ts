@@ -97,6 +97,7 @@ export class RegisterComponent {
 
     const payload = this.registerForm.getRawValue();
     delete (payload as any).acceptTerms;
+    delete (payload as any).confirmpassword; 
 
     this.auth.register(payload).subscribe({
       next: () => this.router.navigate(['/dashboard']),
