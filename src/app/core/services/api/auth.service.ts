@@ -17,7 +17,7 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(email: string, password: string, rememberMe: boolean): Observable<LoginResponse> {
-    console.log(environment.apiUrl + "This is from the auth service");
+    console.log(environment.apiUrl);
     return this.http.post<LoginResponse>(
       `${this.API}/login`,
       { email, password },
