@@ -44,7 +44,7 @@ jobs:
           path: deploy
 
       - name: Deploy via FTP to InfinityFree
-        uses: SamKirkland/FTP-Deploy-Action@v4
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
