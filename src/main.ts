@@ -8,6 +8,8 @@ import { environment } from './environments/environment.prod';
 
 console.log(environment.production);
 console.log(environment.apiUrl);
+console.log("From the main.ts file");
+
 
 
 bootstrapApplication(AppComponent, {
