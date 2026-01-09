@@ -21,10 +21,11 @@ export class AuthService {
 
   /** ✅ API BASE — resolved at runtime, never frozen */
   private get API(): string {
+    console.log("Hewre is the apo called");
+    console.log(environment.apiUrl);
     return `${environment.apiUrl}/Auth`;
   }
 
-  /** ===================== AUTH ===================== */
 
   login(
     email: string,
@@ -84,8 +85,6 @@ export class AuthService {
       tap(() => this.clearAuthState())
     );
   }
-
-  /** ===================== STATE ===================== */
 
   getAccessToken(): string | null {
     return (
