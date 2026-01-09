@@ -52,8 +52,4 @@ jobs:
           local-dir: deploy/
           server-dir: /htdocs/
           dangerous-clean-slate: true
-          exclude: |
-            **/.git*
-          include: |
-            .htaccess
 
