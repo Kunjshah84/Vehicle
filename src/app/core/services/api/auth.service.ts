@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { environment } from '../../../../environments/environment';
-import { AuthState, LoginResponse, RegisterDto, RegisterResponse } from '../../../shared/models/auth.model';
 import { HttpClient } from '@angular/common/http';
-
-
+import { environment } from '../../../../environments/environment';
+import {
+  AuthState,
+  LoginResponse,
+  RegisterDto,
+  RegisterResponse
+} from '../../../shared/models/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly API = environment.apiUrl + '/Auth';
+
   private readonly TOKEN_KEY = 'access_token';
 
   private authStateSubject = new BehaviorSubject<AuthState | null>(null);
@@ -16,8 +19,18 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  login(email: string, password: string, rememberMe: boolean): Observable<LoginResponse> {
-    console.log(environment.apiUrl);
+  /** ✅ API BASE — resolved at runtime, never frozen */
+  private get API(): string {
+    return `${environment.apiUrl}/Auth`;
+  }
+
+  /** ===================== AUTH ===================== */
+
+  login(
+    email: string,
+    password: string,
+    rememberMe: boolean
+  ): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(
       `${this.API}/login`,
       { email, password },
@@ -59,28 +72,27 @@ export class AuthService {
   logout() {
     const authState = this.authStateSubject.value;
 
-    if (!authState?.user?.email) {
-      this.clearAuthState();
-      return this.http.post(`${this.API}/logout`, {});
-    }
+    const payload = authState?.user?.email
+      ? { email: authState.user.email }
+      : {};
 
     return this.http.post(
       `${this.API}/logout`,
-      { email: authState.user.email },
+      payload,
       { withCredentials: true }
     ).pipe(
-      tap(() => {
-        this.authStateSubject.next(null);
-        localStorage.removeItem(this.TOKEN_KEY);
-        sessionStorage.removeItem(this.TOKEN_KEY);
-      })
+      tap(() => this.clearAuthState())
     );
   }
 
+  /** ===================== STATE ===================== */
+
   getAccessToken(): string | null {
-    return this.authStateSubject.value?.token
-      ?? sessionStorage.getItem(this.TOKEN_KEY)
-      ?? localStorage.getItem(this.TOKEN_KEY);
+    return (
+      this.authStateSubject.value?.token ??
+      sessionStorage.getItem(this.TOKEN_KEY) ??
+      localStorage.getItem(this.TOKEN_KEY)
+    );
   }
 
   isAuthenticated(): boolean {
@@ -113,7 +125,6 @@ export class AuthService {
     ).pipe(
       tap(res => {
         const token = this.getAccessToken();
-
         if (!token) return;
 
         this.authStateSubject.next({
@@ -123,5 +134,4 @@ export class AuthService {
       })
     );
   }
-
 }
