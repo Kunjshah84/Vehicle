@@ -19,7 +19,6 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  /** ✅ API BASE — resolved at runtime, never frozen */
   private get API(): string {
     console.log("Hewre is the apo called");
     console.log(environment.apiUrl);
