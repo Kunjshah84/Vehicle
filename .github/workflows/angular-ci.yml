@@ -22,8 +22,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Angular app
-        run: npm run build
+      - name: Build Angular app (production)
+        run: npx ng build --configuration production
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -51,3 +51,9 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: deploy/
           server-dir: /htdocs/
+          dangerous-clean-slate: true
+          exclude: |
+            **/.git*
+          include: |
+            .htaccess
+
