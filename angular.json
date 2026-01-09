@@ -31,8 +31,7 @@
                 "glob": "**/*",
                 "input": "public"
               },
-              "src/assets",
-              "src/.htaccess"
+              "src/assets"
             ],
             "styles": [
               "@angular/material/prebuilt-themes/azure-blue.css",
@@ -52,7 +51,7 @@
               ],
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap" : true
+              "sourceMap": true
             },
             "production": {
               "fileReplacements": [
@@ -105,13 +104,12 @@
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-            {
-              "glob": "**/*",
-              "input": "public"
-            },
-            "src/assets",
-            "src/.htaccess"
-          ],
+              {
+                "glob": "**/*",
+                "input": "public"
+              },
+              "src/assets"
+            ],
             "styles": [
               "@angular/material/prebuilt-themes/azure-blue.css",
               "node_modules/font-awesome/css/font-awesome.min.css",
