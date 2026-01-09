@@ -22,7 +22,7 @@ export class AuthService {
   private get API(): string {
     console.log("Hewre is the apo called");
     console.log(environment.apiUrl);
-    return `${environment.apiUrl}/Auth`;
+    return `${environment.apiUrl.replace('http://', 'https://')}/Auth`;  
   }
 
 
